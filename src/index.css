@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    @apply bg-surface-950 text-gray-100;
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-surface-900;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-surface-500 rounded-full;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-surface-800 rounded-2xl border border-surface-700 p-4;
+  }
+  .card-sm {
+    @apply bg-surface-800 rounded-xl border border-surface-700 p-3;
+  }
+  .btn-primary {
+    @apply bg-accent hover:bg-accent-hover text-white font-medium px-4 py-2 rounded-xl transition-colors text-sm;
+  }
+  .btn-ghost {
+    @apply text-gray-400 hover:text-gray-100 hover:bg-surface-700 font-medium px-3 py-2 rounded-xl transition-colors text-sm;
+  }
+  .badge {
+    @apply text-xs font-semibold px-2 py-0.5 rounded-full;
+  }
+  .tag-A { @apply bg-violet-500/20 text-violet-300; }
+  .tag-B { @apply bg-blue-500/20 text-blue-300; }
+  .tag-C { @apply bg-emerald-500/20 text-emerald-300; }
+  .tag-D { @apply bg-orange-500/20 text-orange-300; }
+  .tag-walk { @apply bg-teal-500/20 text-teal-300; }
+  .tag-rest { @apply bg-gray-500/20 text-gray-400; }
+  .input {
+    @apply bg-surface-700 border border-surface-600 text-gray-100 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent/50 transition-colors w-full placeholder:text-gray-500;
+  }
+  .section-title {
+    @apply text-lg font-semibold text-gray-100;
+  }
+  .label {
+    @apply text-xs font-medium text-gray-400 uppercase tracking-wide;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.2s ease-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Mobile safe area */
+.pb-safe {
+  padding-bottom: max(env(safe-area-inset-bottom), 1rem);
+}
