@@ -121,6 +121,24 @@ export const breakfasts: Meal[] = [
     ],
     recipe: 'Wrzuć wszystko do blendera, zblenduj 30 sekund. Gotowe — możesz spożywać w trakcie spaceru.',
   },
+  {
+    id: 'b8',
+    name: 'Naleśniki z serem twarogowym (3 szt)',
+    calories: 570,
+    protein: 38,
+    carbs: 58,
+    fat: 18,
+    prepTime: '20 min',
+    ingredients: [
+      { name: 'Mąka pszenna', amount: '100g', category: 'dry_goods' },
+      { name: 'Jajka', amount: '2 szt', category: 'meat_dairy' },
+      { name: 'Mleko 2%', amount: '200ml', category: 'meat_dairy' },
+      { name: 'Masło', amount: '10g', category: 'meat_dairy' },
+      { name: 'Twaróg półtłusty', amount: '250g', category: 'meat_dairy' },
+      { name: 'Cukier waniliowy', amount: '1 łyżeczka', category: 'other' },
+    ],
+    recipe: 'Wymieszaj mąkę, jajka i mleko na gładkie ciasto. Smaż cienkie naleśniki na maśle. Twaróg wymieszaj z cukrem waniliowym. Nadziewaj każdy naleśnik serem, składaj w rulony lub trójkąty.',
+  },
 ];
 
 // ─── LUNCHES ───────────────────────────────────────────────────────────────────
@@ -375,6 +393,23 @@ export const dinners: Meal[] = [
     ],
     recipe: 'Ubij jajka, wlej na rozgrzane masło. Gdy prawie ścięte, ułóż szynkę i ser na połowie. Złóż omlet. Posyp szczypiorkiem.',
   },
+  {
+    id: 'd8',
+    name: 'Shake proteinowy + kanapki z twarogiem',
+    calories: 530,
+    protein: 54,
+    carbs: 48,
+    fat: 12,
+    prepTime: '5 min',
+    ingredients: [
+      { name: 'Białko w proszku', amount: '30g (1 scoop)', category: 'other' },
+      { name: 'Mleko 2%', amount: '300ml', category: 'meat_dairy' },
+      { name: 'Chleb pełnoziarnisty', amount: '2 kromki', category: 'dry_goods' },
+      { name: 'Twaróg chudy', amount: '100g', category: 'meat_dairy' },
+      { name: 'Ogórek / rzodkiewki', amount: 'kilka sztuk', category: 'vegetables_fruits' },
+    ],
+    recipe: 'Wymieszaj białko z zimnym mlekiem w shakerze (10 sekund). Posmaruj chleb twarogiem, dodaj warzywa. Zero gotowania — szybka, sycąca kolacja z dużą dawką białka.',
+  },
 ];
 
 // ─── EVENING SNACKS ────────────────────────────────────────────────────────────
@@ -486,14 +521,16 @@ export const snacks: Meal[] = [
 ];
 
 // ─── WEEKLY PLAN (7 days, day index 0-6) ─────────────────────────────────────
+// b4=jajecznica, b6=kanapki, b8=naleśniki z serem, b3=naleśniki proteinowe, b1=owsianka
+// l2=spaghetti bolognese, d8=shake+kanapki (szybka kolacja)
 export const weekPlan: DayMealPlan[] = [
-  { breakfast: breakfasts[0], lunch: lunches[0], dinner: dinners[0], snack: snacks[0] }, // Pn
-  { breakfast: breakfasts[1], lunch: lunches[1], dinner: dinners[1], snack: snacks[1] }, // Wt
-  { breakfast: breakfasts[2], lunch: lunches[2], dinner: dinners[2], snack: snacks[2] }, // Śr
-  { breakfast: breakfasts[3], lunch: lunches[3], dinner: dinners[3], snack: snacks[3] }, // Cz
-  { breakfast: breakfasts[4], lunch: lunches[4], dinner: dinners[4], snack: snacks[4] }, // Pt
-  { breakfast: breakfasts[5], lunch: lunches[5], dinner: dinners[5], snack: snacks[5] }, // Sb
-  { breakfast: breakfasts[6], lunch: lunches[6], dinner: dinners[6], snack: snacks[6] }, // Nd
+  { breakfast: breakfasts[3], lunch: lunches[0], dinner: dinners[7], snack: snacks[0] }, // Pn — jajecznica / kurczak ryż / shake+kanapki
+  { breakfast: breakfasts[5], lunch: lunches[1], dinner: dinners[0], snack: snacks[1] }, // Wt — kanapki / spaghetti / jajecznica z serem
+  { breakfast: breakfasts[7], lunch: lunches[2], dinner: dinners[7], snack: snacks[2] }, // Śr — naleśniki z serem / wrap / shake+kanapki
+  { breakfast: breakfasts[3], lunch: lunches[3], dinner: dinners[1], snack: snacks[3] }, // Cz — jajecznica / ryż indyk / kanapki twaróg
+  { breakfast: breakfasts[5], lunch: lunches[4], dinner: dinners[7], snack: snacks[4] }, // Pt — kanapki / burger / shake+kanapki
+  { breakfast: breakfasts[7], lunch: lunches[5], dinner: dinners[6], snack: snacks[5] }, // Sb — naleśniki z serem / kurczak pieczony / omlet
+  { breakfast: breakfasts[2], lunch: lunches[6], dinner: dinners[4], snack: snacks[6] }, // Nd — naleśniki proteinowe / kurczak kasza / szakszuka
 ];
 
 export const allMealsByType = {

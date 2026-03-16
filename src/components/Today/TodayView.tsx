@@ -13,8 +13,11 @@ import { pl } from 'date-fns/locale';
 import {
   Check, ChevronDown, ChevronUp, RotateCcw, Clock,
   Dumbbell, Footprints, ShoppingCart, Flame, Scale,
-  NotebookPen, AlertCircle,
+  NotebookPen, AlertCircle, TrendingDown,
 } from 'lucide-react';
+
+const START_WEIGHT = 93;
+const GOAL_WEIGHT = 85;
 
 const TODAY = new Date();
 const DATE_STR = format(TODAY, 'yyyy-MM-dd');
@@ -227,6 +230,15 @@ export default function TodayView() {
     { label: 'Aktywność', value: actDone ? 1 : 0, max: 1,  color: 'text-accent' },
   ];
 
+  // Latest recorded weight (from any day)
+  const allLogs = useSelector((s: RootState) => s.calendar.logs);
+  const latestWeight = Object.values(allLogs)
+    .filter(l => l.weight !== undefined && l.weight! > 0)
+    .sort((a, b) => b.date.localeCompare(a.date))[0]?.weight ?? START_WEIGHT;
+  const weightRange = START_WEIGHT - GOAL_WEIGHT;
+  const weightLost = START_WEIGHT - latestWeight;
+  const weightPct = Math.min(100, Math.max(0, Math.round((weightLost / weightRange) * 100)));
+
   const [extraInput, setExtraInput] = useState(String(extra));
   const [weightInput, setWeightInput] = useState(log?.weight ? String(log.weight) : '');
   const [notesInput, setNotesInput] = useState(log?.notes ?? '');
@@ -286,6 +298,34 @@ export default function TodayView() {
               className={`h-full rounded-full transition-all ${over ? 'bg-rose-500' : 'bg-gradient-to-r from-amber-500 to-emerald-500'}`}
               style={{ width: `${kcalPct}%` }}
             />
+          </div>
+        </div>
+
+        {/* Weight progress bar */}
+        <div className="mt-3 pt-3 border-t border-surface-700">
+          <div className="flex items-center justify-between text-xs mb-1.5">
+            <div className="flex items-center gap-1.5 text-gray-500">
+              <TrendingDown size={12} className="text-emerald-400" />
+              <span>Postęp wagi</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-gray-500">{START_WEIGHT} kg</span>
+              <span className="font-bold text-emerald-400">{latestWeight} kg</span>
+              <span className="text-gray-600">→ cel {GOAL_WEIGHT} kg</span>
+            </div>
+          </div>
+          <div className="h-2 rounded-full bg-surface-600 overflow-hidden">
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-blue-500 to-emerald-400 transition-all duration-500"
+              style={{ width: `${weightPct}%` }}
+            />
+          </div>
+          <div className="flex justify-between mt-1">
+            <span className="text-[10px] text-gray-600">Start</span>
+            <span className="text-[10px] text-emerald-500 font-semibold">
+              {weightLost > 0 ? `−${weightLost.toFixed(1)} kg` : `Wprowadź wagę poniżej`}
+            </span>
+            <span className="text-[10px] text-gray-600">Cel</span>
           </div>
         </div>
       </div>
@@ -441,19 +481,52 @@ export default function TodayView() {
                 </div>
               );
             })}
-            <div className="pt-2 border-t border-surface-700 flex items-center justify-between">
-              <span className="text-sm text-gray-400">Podjadanie / extra</span>
-              <div className="flex items-center gap-2">
-                <input
-                  type="number"
-                  className="w-20 bg-surface-700 border border-surface-600 rounded-xl px-2.5 py-1 text-sm text-right text-gray-100 focus:outline-none focus:ring-1 focus:ring-accent/50"
-                  placeholder="0"
-                  value={extraInput}
-                  min={0}
-                  onChange={e => setExtraInput(e.target.value)}
-                  onBlur={() => dispatch(setExtraCalories({ date: DATE_STR, calories: parseInt(extraInput) || 0 }))}
-                />
-                <span className="text-sm text-gray-500">kcal</span>
+            <div className="pt-2 border-t border-surface-700 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-400">Podjadanie / extra</span>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="number"
+                    className="w-20 bg-surface-700 border border-surface-600 rounded-xl px-2.5 py-1 text-sm text-right text-gray-100 focus:outline-none focus:ring-1 focus:ring-accent/50"
+                    placeholder="0"
+                    value={extraInput}
+                    min={0}
+                    onChange={e => setExtraInput(e.target.value)}
+                    onBlur={() => dispatch(setExtraCalories({ date: DATE_STR, calories: parseInt(extraInput) || 0 }))}
+                  />
+                  <span className="text-sm text-gray-500">kcal</span>
+                </div>
+              </div>
+              {/* Quick presets */}
+              <div className="flex gap-1.5 flex-wrap">
+                <span className="text-[10px] text-gray-600 self-center mr-0.5">Szybko dodaj:</span>
+                {[
+                  { label: '+100', val: 100, desc: 'owoc' },
+                  { label: '+200', val: 200, desc: 'kanapka' },
+                  { label: '+300', val: 300, desc: 'shake' },
+                  { label: '+500', val: 500, desc: 'duże podjadanie' },
+                ].map(({ label, val, desc }) => (
+                  <button
+                    key={val}
+                    title={desc}
+                    onClick={() => {
+                      const newVal = (parseInt(extraInput) || 0) + val;
+                      setExtraInput(String(newVal));
+                      dispatch(setExtraCalories({ date: DATE_STR, calories: newVal }));
+                    }}
+                    className="px-2.5 py-1 rounded-lg bg-surface-700 hover:bg-surface-600 border border-surface-600 hover:border-amber-500/40 text-xs text-amber-400 font-semibold transition-colors"
+                  >
+                    {label}
+                  </button>
+                ))}
+                {extra > 0 && (
+                  <button
+                    onClick={() => { setExtraInput('0'); dispatch(setExtraCalories({ date: DATE_STR, calories: 0 })); }}
+                    className="px-2.5 py-1 rounded-lg bg-surface-700 hover:bg-rose-500/10 border border-surface-600 hover:border-rose-500/40 text-xs text-gray-500 hover:text-rose-400 transition-colors"
+                  >
+                    Reset
+                  </button>
+                )}
               </div>
             </div>
           </div>
